@@ -1,0 +1,110 @@
+{
+ "description": "SSDD semantic-dimension vectors (6 human-rated dimensions), row-aligned with Conversation/PTxx.csv; all-NaN rows = word not in the rating table (dropped by the loader). Companion to the word2vec/glove/fasttext exports.",
+ "exported_at": "2026-09-12T14:17:36",
+ "exported_by": "internal export script (not part of this delivery)",
+ "source_transcription": "raw conversation transcripts (pre-anonymization export; not shipped)",
+ "rating_table": "Embedding_model/SemanticDimension/Estimated_semantic_dimensions_word2vec_English.csv",
+ "dtype": "float64 (the original in-memory precision of the SSDD run)",
+ "normalization_scope": "normalize(axis=0) over the FULL transcript (all sids) after OOV removal, before sid filtering \u2014 same as the original run; do not renormalize.",
+ "partition_check": "per participant: distinct words have distinct final vectors, so the anonymized word-ID partition equals the word partition used by the KMeans dedup (drop_duplicates on word).",
+ "participants": {
+  "PT01": {
+   "csv_rows": 692,
+   "in_vocabulary": 653,
+   "out_of_vocabulary": 39,
+   "distinct_words": 247,
+   "distinct_vectors": 247
+  },
+  "PT02": {
+   "csv_rows": 1475,
+   "in_vocabulary": 1401,
+   "out_of_vocabulary": 74,
+   "distinct_words": 475,
+   "distinct_vectors": 475
+  },
+  "PT03": {
+   "csv_rows": 1522,
+   "in_vocabulary": 1426,
+   "out_of_vocabulary": 96,
+   "distinct_words": 427,
+   "distinct_vectors": 427
+  },
+  "PT04": {
+   "csv_rows": 5093,
+   "in_vocabulary": 4778,
+   "out_of_vocabulary": 315,
+   "distinct_words": 842,
+   "distinct_vectors": 842
+  },
+  "PT05": {
+   "csv_rows": 3408,
+   "in_vocabulary": 3189,
+   "out_of_vocabulary": 219,
+   "distinct_words": 756,
+   "distinct_vectors": 756
+  },
+  "PT06": {
+   "csv_rows": 5749,
+   "in_vocabulary": 5268,
+   "out_of_vocabulary": 481,
+   "distinct_words": 1105,
+   "distinct_vectors": 1105
+  },
+  "PT07": {
+   "csv_rows": 1769,
+   "in_vocabulary": 1654,
+   "out_of_vocabulary": 115,
+   "distinct_words": 461,
+   "distinct_vectors": 461
+  },
+  "PT08": {
+   "csv_rows": 4543,
+   "in_vocabulary": 4206,
+   "out_of_vocabulary": 337,
+   "distinct_words": 835,
+   "distinct_vectors": 835
+  },
+  "PT09": {
+   "csv_rows": 1390,
+   "in_vocabulary": 1278,
+   "out_of_vocabulary": 112,
+   "distinct_words": 378,
+   "distinct_vectors": 378
+  },
+  "PT10": {
+   "csv_rows": 734,
+   "in_vocabulary": 701,
+   "out_of_vocabulary": 33,
+   "distinct_words": 254,
+   "distinct_vectors": 254
+  },
+  "PT11": {
+   "csv_rows": 1661,
+   "in_vocabulary": 1530,
+   "out_of_vocabulary": 131,
+   "distinct_words": 430,
+   "distinct_vectors": 430
+  },
+  "PT12": {
+   "csv_rows": 5406,
+   "in_vocabulary": 5119,
+   "out_of_vocabulary": 287,
+   "distinct_words": 823,
+   "distinct_vectors": 823
+  },
+  "PT13": {
+   "csv_rows": 2450,
+   "in_vocabulary": 2280,
+   "out_of_vocabulary": 170,
+   "distinct_words": 596,
+   "distinct_vectors": 596
+  },
+  "PT14": {
+   "csv_rows": 1848,
+   "in_vocabulary": 1725,
+   "out_of_vocabulary": 123,
+   "distinct_words": 454,
+   "distinct_vectors": 454
+  }
+ }
+}
