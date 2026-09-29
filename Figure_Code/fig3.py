@@ -2,9 +2,11 @@
 
 Panels:
     A: Percentage of selected channels.
+    B: Distribution of selected channels across brain areas (bar chart; the
+       paper's brain-surface maps are not part of this script).
     C: Decoding using channels from three brain areas.
-    D: Frequency-band contributions to decoding / channel selection
-       (two PDFs: per-band selection percentage + relative channel importance).
+    D: Selected channels by frequency (two PDFs: per-band selection
+       percentage on top, relative channel importance below).
 
 Outputs are written to ``Figure/fig3/``. All data paths are
 resolved relative to this file's location, so the script can be run from any
@@ -260,7 +262,7 @@ def plot_selective_percentage_summary(feature_df: pd.DataFrame, selective_df: pd
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     plt.tight_layout()
-    plt.savefig(output_dir / "A_selectiveMeanPercentage_Boxplot.pdf", dpi=300)
+    plt.savefig(output_dir / "A_selective_percentage_boxplot.pdf", dpi=300)
     plt.close("all")  # reset figure state (headless backends do not clear on show)
 
 
@@ -342,7 +344,7 @@ def plot_selection_percentage_by_band() -> None:
     ax = plt.gca()
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    plt.savefig(output_dir / "E_Selection_Percentage_mean_6Band_BoxPlot_Ver2.pdf", dpi=300)
+    plt.savefig(output_dir / "D_selection_percentage_by_band_boxplot.pdf", dpi=300)
     plt.close("all")  # reset figure state (headless backends do not clear on show)
 
 
@@ -439,7 +441,7 @@ def plot_frequency_band_importance() -> None:
     ax = plt.gca()
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    plt.savefig(output_dir / "E_Relative_channel_importance_mean_6Band_BoxPlot.pdf", dpi=300)
+    plt.savefig(output_dir / "D_relative_channel_importance_by_band_boxplot.pdf", dpi=300)
     plt.close("all")  # reset figure state (headless backends do not clear on show)
 
 
@@ -455,7 +457,7 @@ def plot_three_area_control_decoding(
         data_combined: Per-bootstrap decoding results DataFrame.
         bootstrap_test: Whether bootstrap-based accuracies are used.
     """
-    _ = bootstrap_test  # retained for API consistency (only the archived extra panels use it)
+    _ = bootstrap_test  # not used by this panel; kept for caller compatibility
 
     participant_ids = decoding_statistics.participant_id.unique()
 
@@ -541,7 +543,103 @@ def plot_three_area_control_decoding(
         plt.Line2D([0], [0], color="black", linestyle="--", alpha=0.3, label="Chance"),
     ]
     plt.legend(handles=legend_handles, loc="upper left", frameon=False, fontsize=12)
-    plt.savefig(output_dir / "D_result_3area.pdf", dpi=300)
+    plt.savefig(output_dir / "C_result_3area.pdf", dpi=300)
+    plt.close("all")  # reset figure state (headless backends do not clear on show)
+
+
+# Paper bar order for the brain-area chart (left to right); True marks the
+# three regions highlighted in the paper (pars triangularis, precentral,
+# middle temporal).
+PAPER_BAR_ORDER = [
+    ("caudalmiddlefrontal", False), ("lateralorbitofrontal", False),
+    ("parstriangularis", True), ("precentral", True),
+    ("inferiortemporal", False), ("thalamus-proper", False),
+    ("putamen", False), ("caudate", False), ("amygdala", False),
+    ("superiortemporal", False), ("rostralmiddlefrontal", False),
+    ("hippocampus", False), ("middletemporal", True), ("other", False),
+]
+N_FREQ_BANDS = 6
+
+
+def _read_selective_electrode_rows(patient_id: str) -> pd.DataFrame:
+    """Read one participant's selective-electrode CSV as raw rows."""
+    file_path = (
+        f"{ROOT}/Matrix/Matrix_10Cluster/{patient_id}clustering_selective_electrodes_df_"
+        f"timeBefore500_timeAfter0_detrendTrue_normalizeFalse_envelope_word2vec_"
+        f"nbrclusters10_pvalue0.05.csv"
+    )
+    return pd.read_csv(file_path)
+
+
+def _area_selection_stats() -> tuple[pd.Series, pd.Series]:
+    """Per-area selected-channel percentage (mean/s.d. over seeds), paper order.
+
+    The numerator counts every selected (electrode, frequency band) pair per
+    seed; the denominator is the area's channel count times the number of
+    frequency bands. 'other' pools all regions outside the 13 plotted areas.
+    """
+    patient_ids = [f"PT{i:02d}" for i in range(1, 15)]
+    all_rows = pd.concat(
+        [_read_selective_electrode_rows(pid) for pid in patient_ids], axis=0
+    )
+
+    parcellation_df = pd.read_csv(ROOT / "Parcellation" / "parcellation.csv")
+    useful = parcellation_df[parcellation_df["janca_useful"] == 1].copy()
+    useful["electrode_name"] = useful["pid"] + "_" + useful["electrode"]
+
+    areas_13 = [area for area, _ in PAPER_BAR_ORDER if area != "other"]
+    denom = useful[useful["area"].isin(areas_13)].groupby("area")["electrode"].count() * N_FREQ_BANDS
+    n_other_total = useful[~useful["area"].isin(areas_13)]["electrode"].count() * N_FREQ_BANDS
+
+    merged = pd.merge(all_rows, useful, on="electrode_name", how="left")
+    selected_13 = merged[merged["area"].isin(areas_13)]
+    counts = (
+        selected_13.groupby(["seed", "area"]).size().unstack(fill_value=0)
+        .reindex(columns=areas_13, fill_value=0)
+    )
+    per_seed_13 = counts / denom * 100.0
+    per_seed_other = (
+        merged[merged["area"].notna() & ~merged["area"].isin(areas_13)]
+        .groupby("seed").size() / n_other_total * 100.0
+    )
+
+    mean = per_seed_13.mean()
+    std = per_seed_13.std(ddof=1)
+    mean["other"] = per_seed_other.mean()
+    std["other"] = per_seed_other.std(ddof=1)
+
+    order = [area for area, _ in PAPER_BAR_ORDER]
+    return mean.reindex(order), std.reindex(order)
+
+
+def plot_area_selection_percentage_barplot() -> None:
+    """Plot the distribution of selected channels across brain areas."""
+    mean, std = _area_selection_stats()
+
+    output_dir = OUTPUT_DIR
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    roi_areas = {area for area, is_roi in PAPER_BAR_ORDER if is_roi}
+    x = np.arange(len(mean))
+    plt.figure(figsize=(10, 4.6))
+    plt.bar(
+        x, mean.values, yerr=std.values, color="#B8B8B8", ecolor="black",
+        capsize=2.5, width=0.72, error_kw={"lw": 1.0},
+    )
+    labels = [area if area != "thalamus-proper" else "thalamus-\nproper" for area in mean.index]
+    ax = plt.gca()
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=9)
+    for label in ax.get_xticklabels():
+        if label.get_text().replace("-\n", "-") in roi_areas:
+            label.set_color("#c0392b")
+            label.set_fontweight("bold")
+    plt.ylabel("Selected channels (%)")
+    plt.yticks([0, 10, 20])
+    plt.ylim(0, 22)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    plt.savefig(output_dir / "B_area_selection_percentage_barplot.pdf", dpi=300, bbox_inches="tight")
     plt.close("all")  # reset figure state (headless backends do not clear on show)
 
 
@@ -571,6 +669,8 @@ if __name__ == "__main__":
         parcellation_df,
     )
     plot_selective_percentage_summary(feature_count_df, selective_stats)
+
+    plot_area_selection_percentage_barplot()
 
     plot_selection_percentage_by_band()
     plot_frequency_band_importance()
