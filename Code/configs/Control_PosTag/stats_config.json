@@ -1,0 +1,23 @@
+{
+    "stats_params": {
+        "decoding_path":"../Decoding_Result/SemanticDecoding_PosTag/",
+        "save_path": "../Statistics/Stats_PosTag/",
+        "figure_path": "../Figure/Fig_Control/"
+    },
+    "nclusters_params": {
+        "pretrained_embedding_model":"word2vec",
+        "matrix_type": "selective",
+        "num_draws": 10,
+        "reg_strength": 10e-5,
+        "time_before": 500,
+        "time_after": 0
+    },
+    "embedding_params": {
+        "matrix_type": "selective",
+        "num_draws": 10,
+        "reg_strength": 10e-5,
+        "time_before": 500,
+        "time_after": 0,
+        "n_cluster": 10
+    }
+}

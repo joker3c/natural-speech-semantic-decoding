@@ -1,0 +1,22 @@
+{
+    "parcellation_params": {
+        "data_path":"../Parcellation/"
+    },
+    "transcription_params": {
+        "data_path": "../Transcription/Conversation/"
+    },
+    "selectivity_params": {
+        "data_path":"../Matrix/Matrix_10Cluster/"},
+    "condition_params": {
+        "feature_name": "envelope", 
+        "matrix_type": "selective",
+        "time_before": 500,
+        "time_after": 0,
+        "timeseries": false,
+        "detrend": true,
+        "normalize": false,
+        "n_cluster": 10,
+        "p_value": 0.05,
+        "pretrained_embedding_model": "word2vec"
+    }
+}

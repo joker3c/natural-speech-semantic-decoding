@@ -1,0 +1,30 @@
+{
+    "_comment": "Testing config file",
+    "participant_params": {
+        "participant_id": "PT10",
+        "condition": "speaking",
+        "feature_name": "envelope",
+        "matrix_type": "selective",
+        "time_before": 500,
+        "time_after": 0,
+        "timeseries": false,
+        "detrend": true,
+        "normalize": false,
+        "data_path": "../Data_processed/Envelope/Result/",
+        "save_path": "../Matrix/Matrix_30Cluster/",
+        "n_cluster": 30,
+        "n_seeds": 20,
+        "p_value": 0.05
+    },
+    "transcription_params": {
+        "transcription_path": "../Transcription/Conversation/",
+        "pretrained_embedding_model": "word2vec",
+        "normalize_embeddings": true
+    },
+    "decoding_params": {
+        "regularization_strength": 0.0001,
+        "num_draws": 10,
+        "n_seeds_bootstrap": 10,
+        "save_path": "../Decoding_Result/SemanticDecoding/"
+    }
+}
