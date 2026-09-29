@@ -1,8 +1,6 @@
 # Natural Speech Semantic Decoding
 
-This repository packages the analysis code and derived data for the paper's
-speech-decoding experiments. Everything that must be fetched from outside the repository — the
-neural-data archive and the pretrained embedding models — is collected in §5 External Data Sources.
+This repository contains the source code for the manuscript "Decoding semantics from natural speech production using human intracranial EEG". We have included the decoding pipeline, figure-generation code, anonymized transcripts with precomputed word embeddings. Neural data archived at DABI (DOI: 10.18120/5jg5-j555).
 
 ## 1. Repository Layout
 
