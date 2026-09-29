@@ -751,7 +751,6 @@ Unnamed: 0,index,electrode,pid,area,hemi,bipolar,useful,janca_useful,broad_area
 749,168,LAF9-10,PT05,rostralmiddlefrontal,lh,True,1,1,frontal
 750,169,LAF10-11,PT05,rostralmiddlefrontal,lh,True,1,1,frontal
 751,170,LAF11-12,PT05,rostralmiddlefrontal,lh,True,1,1,frontal
-752,171,LAF12-13,PT05,rostralmiddlefrontal,lh,True,1,1,frontal
 753,172,LAF13-14,PT05,rostralmiddlefrontal,lh,True,1,1,frontal
 754,173,LAF14-15,PT05,rostralmiddlefrontal,lh,True,1,1,frontal
 755,174,LAF15-16,PT05,rostralmiddlefrontal,lh,True,1,1,frontal
@@ -1902,7 +1901,6 @@ Unnamed: 0,index,electrode,pid,area,hemi,bipolar,useful,janca_useful,broad_area
 1900,72,LFIa01_02,PT12,medialorbitofrontal,lh,True,1,1,frontal
 1901,73,LFIa02_03,PT12,medialorbitofrontal,lh,True,1,1,frontal
 1902,74,LFIa03_04,PT12,medialorbitofrontal,lh,True,1,1,frontal
-1903,75,LFIa03_04,PT12,lateralorbitofrontal,lh,True,1,1,frontal
 1904,76,LFIa04_05,PT12,lateralorbitofrontal,lh,True,0,0,frontal
 1905,77,LFIa06_07,PT12,lateralorbitofrontal,lh,True,1,1,frontal
 1906,78,LFIa07_08,PT12,lateralorbitofrontal,lh,True,1,1,frontal
