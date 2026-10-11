@@ -73,11 +73,10 @@ Transcription/
 
 ### 3.3 `Parcellation/`
 
-- `parcellation.csv` — one row per implanted electrode (2,232 rows): `electrode`, `pid`,
-  `area`, `hemi`, `broad_area`, etc.
-- `pos.npy` — MNI x/y/z coordinates for the 1,908 analysis electrodes (rows with
-  `janca_useful = 1` in `parcellation.csv`), row-aligned with that filtered subset;
-  read by `Figure_Code/fig1.py`.
+- `parcellation.csv` — one row per analysis electrode (1,908 rows): `electrode`, `pid`,
+  `area`, `hemi`, `broad_area`, `janca_useful` (all 1 — every row is in the analysis set).
+- `pos.npy` — MNI x/y/z coordinates for the 1,908 analysis electrodes, row-aligned
+  with `parcellation.csv`; read by `Figure_Code/fig1.py`.
 
 ### 3.4 `Matrix/`
 
